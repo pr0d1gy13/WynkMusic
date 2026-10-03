@@ -59,9 +59,23 @@ class SongSearchDelegate extends SearchDelegate<Song?> {
 
   Widget _buildSearchResults(BuildContext context) {
     final allSongs = DummyData.getSongs();
+    final searchTerm = query.trim().toLowerCase();
+
+    if (searchTerm.isEmpty) {
+      return Container(
+        color: const Color(0xFF0C0C0C),
+        child: const Center(
+          child: Text(
+            'Search for songs or artists...',
+            style: TextStyle(color: Colors.white54, fontSize: 16),
+          ),
+        ),
+      );
+    }
+
     final results = allSongs.where((song) {
-      final titleMatch = song.title.toLowerCase().contains(query.toLowerCase());
-      final artistMatch = song.artist.toLowerCase().contains(query.toLowerCase());
+      final titleMatch = song.title.toLowerCase().contains(searchTerm);
+      final artistMatch = song.artist.toLowerCase().contains(searchTerm);
       return titleMatch || artistMatch;
     }).toList();
 
@@ -77,7 +91,7 @@ class SongSearchDelegate extends SearchDelegate<Song?> {
       );
     }
 
-    return Container(
+    return Material(
       color: const Color(0xFF0C0C0C),
       child: ListView.builder(
         itemCount: results.length,

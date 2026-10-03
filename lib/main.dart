@@ -49,7 +49,15 @@ class _WynkCloneAppState extends State<WynkCloneApp> {
           focusNode: _focusNode,
           autofocus: true,
           onKeyEvent: (node, event) {
-            if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
+            final primaryContext = FocusManager.instance.primaryFocus?.context;
+            bool isTextField = false;
+            if (primaryContext != null) {
+              isTextField = primaryContext.widget is EditableText ||
+                  primaryContext.widget is TextField ||
+                  primaryContext.findAncestorWidgetOfExactType<EditableText>() != null;
+            }
+
+            if (!isTextField && event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.space) {
               context.read<AudioProvider>().togglePlayPause();
               return KeyEventResult.handled;
             }
